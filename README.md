@@ -1,2 +1,0 @@
-# quizzler-flutter
-flutter training
