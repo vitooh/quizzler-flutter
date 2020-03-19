@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 import 'quizBrain.dart';
 
 QuizBrain quizBrain = QuizBrain();
@@ -32,11 +33,41 @@ class _QuizPageState extends State<QuizPage> {
   List<Icon> scoreKeeper = [];
 
   void checkAnswer(bool userPickedAnswer) {
-    
+    bool correctAnswer =
+      quizBrain.getCorrectAnswer();
+
+    setState(() {
+    if (quizBrain.isFinished()) {
+      Alert(
+          context: context,
+          title: "End of the quiz!",
+          desc: "Congratulation!")
+          .show();
+      quizBrain.reset();
+      scoreKeeper.clear();
+      }
+
+    else
+      if (userPickedAnswer == correctAnswer) {
+        scoreKeeper.add(
+        Icon(
+          Icons.check,
+          color: Colors.red,
+        )
+        );
+      }
+      else {
+      scoreKeeper.add(
+          Icon(
+            Icons.clear,
+            color: Colors.green,
+          )
+      );
+    }
+
+      quizBrain.nextQuestion();
+    });
   }
-
-
-  int currentQuestion = 0;
 
 
   @override
@@ -51,7 +82,7 @@ class _QuizPageState extends State<QuizPage> {
             padding: EdgeInsets.all(10.0),
             child: Center(
               child: Text(
-                quizBrain.getQuestionText(currentQuestion),
+                quizBrain.getCurrentText(),
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 25.0,
@@ -75,26 +106,10 @@ class _QuizPageState extends State<QuizPage> {
                 ),
               ),
               onPressed: () {
-                bool correctAnswer =
-                  quizBrain.getQuestionAnwser(currentQuestion);
-
-                //The user picked true.
-                setState(() {
-
-                  quizBrain.nextQuestion();
-
-                  scoreKeeper.add(
-
-                    Icon(
-                      Icons.check,
-                      color: Colors.green,
-                    ),
-                );
-                });
-              },
+                  checkAnswer(true);
+                }),
             ),
           ),
-        ),
         Expanded(
           child: Padding(
             padding: EdgeInsets.all(15.0),
@@ -107,28 +122,13 @@ class _QuizPageState extends State<QuizPage> {
                   color: Colors.white,
                 ),
               ),
-              onPressed: () {
+                onPressed: () {
+                  checkAnswer(false);
+                }),
 
-                bool correctAnswer =
-                  quizBrain.getQuestionAnwser(currentQuestion);
-
-                //The user picked false.
-                setState(() {
-
-
-                  currentQuestion++;
-
-                  scoreKeeper.add(
-                    Icon(
-                    Icons.close,
-                    color: Colors.red,
-                    ),
-                  );
-                });
-              },
             ),
           ),
-        ),
+
         Row(
           children: scoreKeeper,
         ),

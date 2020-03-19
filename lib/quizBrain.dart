@@ -35,17 +35,34 @@ class QuizBrain {
   ];
 
   String getQuestionText(int questionNumber) {
-    return _questions[_questionNumber].questionText;
+    return _questions[questionNumber].questionText;
   }
 
-  bool getQuestionAnwser(int questionNumber) {
-    return _questions[_questionNumber].questionAnswer;
+  String getCurrentText() {
+    return getQuestionText(_currentQuestion);
+  }
+
+  bool getQuestionAnswer(int questionNumber) {
+    return _questions[questionNumber].questionAnswer;
+  }
+
+  bool getCorrectAnswer(){
+    return getQuestionAnswer(_currentQuestion);
   }
 
   int nextQuestion () {
     if (_currentQuestion < _questions.length - 1){
        _currentQuestion++;
     }
+  }
+
+  bool isFinished() {
+    if (_currentQuestion >= _questions.length - 1) return true;
+    else return false;
+  }
+
+  void reset() {
+    _currentQuestion = 0;
   }
 
 }
